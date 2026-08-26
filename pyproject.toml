@@ -8,6 +8,10 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.13"
 django = "^6.1"
+psycopg2-binary = "^2.9.12"
+python-dotenv = "^1.2.3"
+pillow = "^12.3.0"
+ipython = "^9.16.1"
 
 
 [tool.poetry.group.dev.dependencies]
