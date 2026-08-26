@@ -1,0 +1,1 @@
+[{"model": "catalog.category", "pk": 1, "fields": {"name": "Ноутбуки", "description": "Ноутбуки для работы и учебы"}}, {"model": "catalog.category", "pk": 2, "fields": {"name": "Смартфоны", "description": "Мобильные телефоны"}}, {"model": "catalog.category", "pk": 3, "fields": {"name": "Мониторы", "description": "Мониторы для компьютеров"}}]
