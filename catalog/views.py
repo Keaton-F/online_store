@@ -1,9 +1,10 @@
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
 
-def home(request):
+def home(request: HttpRequest) -> HttpResponse:
     return render(request, "catalog/home.html")
 
 
-def contacts(request):
+def contacts(request: HttpRequest) -> HttpResponse:
     return render(request, "catalog/contacts.html")

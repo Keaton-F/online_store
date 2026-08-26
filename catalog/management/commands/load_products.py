@@ -1,3 +1,5 @@
+from typing import Any
+
 from django.core.management import BaseCommand, call_command
 
 from catalog.models import Category, Product
@@ -6,7 +8,7 @@ from catalog.models import Category, Product
 class Command(BaseCommand):
     help = "Удаляет существующие данные и загружает тестовые данные из фикстур."
 
-    def handle(self, *args, **options):
+    def handle(self, *args: Any, **options: Any) -> None:
         Product.objects.all().delete()
         Category.objects.all().delete()
 
