@@ -1,0 +1,44 @@
+{% extends "catalog/base.html" %}
+
+{% block content %}
+    <div class="container py-4">
+        <article>
+            <div class="mb-4">
+                <h1>{{ post.title }}</h1>
+                <p class="text-body-secondary">
+                    {{ post.created_at }} · Просмотров: {{ post.views_count }}
+                </p>
+            </div>
+
+            {% if post.preview %}
+                <img src="{{ post.preview.url }}"
+                     class="img-fluid rounded mb-4"
+                     alt="{{ post.title }}">
+            {% endif %}
+
+            <div class="mb-4">
+                {{ post.content|linebreaks }}
+            </div>
+
+            <p>
+                {% if post.is_published %}
+                    <span class="badge text-bg-success">Опубликовано</span>
+                {% else %}
+                    <span class="badge text-bg-secondary">Не опубликовано</span>
+                {% endif %}
+            </p>
+
+            <div class="d-flex gap-2">
+                <a href="{% url 'blogs:list' %}" class="btn btn-secondary">
+                    Вернуться к списку
+                </a>
+                <a href="{% url 'blogs:update' post.pk %}" class="btn btn-primary">
+                    Редактировать
+                </a>
+                <a href="{% url 'blogs:delete' post.pk %}" class="btn btn-danger">
+                    Удалить
+                </a>
+            </div>
+        </article>
+    </div>
+{% endblock %}
