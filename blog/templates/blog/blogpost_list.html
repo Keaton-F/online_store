@@ -1,0 +1,21 @@
+{% extends "catalog/base.html" %}
+
+{% block content %}
+    <h1>Блог</h1>
+
+    {% for post in posts %}
+        <article>
+            <h2>
+                <a href="{% url 'blogs:detail' post.pk %}">
+                    {{ post.title }}
+                </a>
+            </h2>
+
+            <p>{{ post.content|truncatechars:100 }}</p>
+            <p>Дата публикации: {{ post.created_at }}</p>
+            <p>Просмотров: {{ post.views_count }}</p>
+        </article>
+    {% empty %}
+        <p>Опубликованных статей пока нет.</p>
+    {% endfor %}
+{% endblock %}

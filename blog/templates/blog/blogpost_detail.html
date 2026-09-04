@@ -1,0 +1,19 @@
+{% extends "catalog/base.html" %}
+
+{% block content %}
+    <article>
+        <h1>{{ post.title }}</h1>
+
+        {% if post.preview %}
+            <img src="{{ post.preview.url }}" alt="{{ post.title }}">
+        {% endif %}
+
+        <p>{{ post.content }}</p>
+
+        <p>Дата создания: {{ post.created_at }}</p>
+        <p>Просмотров: {{ post.views_count }}</p>
+        <p>Опубликовано: {{ post.is_published }}</p>
+    </article>
+
+    <a href="{% url 'blogs:list' %}">Вернуться к списку</a>
+{% endblock %}
