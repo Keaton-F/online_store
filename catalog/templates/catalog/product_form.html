@@ -1,0 +1,58 @@
+{% extends "catalog/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0">
+                        {% if object %}Редактирование: {{ object.name }}{% else %}Новый товар{% endif %}
+                    </h3>
+                </div>
+                <div class="card-body">
+
+                    <!-- Важно: enctype="multipart/form-data" необходим для загрузки картинок -->
+                    <form method="post" enctype="multipart/form-data" novalidate>
+                        {% csrf_token %} <!-- Защита от CSRF-атак -->
+
+                        <!-- Вывод общих ошибок (например, запрещенных слов из метода clean) -->
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger shadow-sm">
+                                {% for error in form.non_field_errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <!-- Перебор полей формы -->
+                        {% for field in form %}
+                            <div class="mb-3 text-start">
+                                <label for="{{ field.id_for_label }}" class="form-label font-weight-bold">{{ field.label }}</label>
+
+                                <!-- Само поле (со стилями из __init__) -->
+                                {{ field }}
+
+                                <!-- Вывод ошибок поля (например, отрицательной цены) -->
+                                {% if field.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in field.errors %}
+                                            <div class="fw-bold"> {{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+
+                        <div class="mt-4 pt-3 border-top text-center">
+                            <button type="submit" class="btn btn-success px-4 me-2">Сохранить</button>
+                            <a href="{% url 'home' %}" class="btn btn-secondary px-4">Отмена</a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
