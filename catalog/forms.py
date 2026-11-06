@@ -1,28 +1,31 @@
+from typing import Any, cast
+
 from django import forms
 from django.core.exceptions import ValidationError
+
 from .models import Product
 
-FORBIDDEN_WORDS = [
-    'казино', 'криптовалюта', 'крипта', 'биржа',
-    'дешево', 'бесплатно', 'обман', 'полиция', 'радар'
-]
+# Глобальная константа
+FORBIDDEN_WORDS = ["казино", "криптовалюта", "крипта", "биржа", "дешево", "бесплатно", "обман", "полиция", "радар"]
 
 
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['name', 'description', 'image', 'category', 'price']
+        fields = ["name", "description", "image", "category", "price"]
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        """Стилизация всех полей формы"""
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             if isinstance(field.widget, forms.CheckboxInput):
-                field.widget.attrs.update({'class': 'form-check-input'})
+                field.widget.attrs.update({"class": "form-check-input"})
             else:
-                field.widget.attrs.update({'class': 'form-control'})
+                field.widget.attrs.update({"class": "form-control"})
 
-    def clean_price(self):
-        price = self.cleaned_data.get('price')
+    def clean_price(self) -> Any:
+        """Валидация цены"""
+        price = self.cleaned_data.get("price")
 
         if price is not None and price < 0:
             raise ValidationError(
@@ -32,14 +35,15 @@ class ProductForm(forms.ModelForm):
 
         return price
 
-    def clean(self):
-        cleaned_data = super().clean()
+    def clean(self) -> dict[str, Any]:
+        """Проверка названия и описания на запрещенные слова"""
+        cleaned_data = cast(dict[str, Any], super().clean())
 
-        name = cleaned_data.get('name', '')
-        description = cleaned_data.get('description', '')
+        name = cleaned_data.get("name", "")
+        description = cleaned_data.get("description", "")
 
-        name_lower = name.lower() if name else ''
-        description_lower = description.lower() if description else ''
+        name_lower = name.lower() if name else ""
+        description_lower = description.lower() if description else ""
 
         for word in FORBIDDEN_WORDS:
             if word in name_lower:
