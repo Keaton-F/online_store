@@ -1,4 +1,7 @@
+from typing import Any
+
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
+from django.db.models import QuerySet
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
@@ -7,15 +10,19 @@ from django.views.generic import DetailView, ListView, TemplateView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 from .forms import ProductForm
-from .models import Product
+from .models import Category, Product
+from .services import get_all_products, get_products_by_category
 
 
 class HomeView(ListView):
-    """Общедоступная страница просмотра списка товаров"""
+    """Общедоступная страница просмотра списка товаров (с низкоуровневым кешированием)"""
 
     model = Product
     template_name = "catalog/home.html"
     context_object_name = "products"
+
+    def get_queryset(self) -> QuerySet[Product]:
+        return get_all_products()
 
 
 class ContactsView(TemplateView):
@@ -30,6 +37,23 @@ class ProductDetailView(LoginRequiredMixin, DetailView):
     model = Product
     template_name = "catalog/product_detail.html"
     context_object_name = "product"
+
+
+class CategoryProductsView(ListView):
+    """Отображение списка всех продуктов в указанной категории"""
+
+    model = Product
+    template_name = "catalog/category_products.html"
+    context_object_name = "products"
+
+    def get_queryset(self) -> QuerySet[Product]:
+        category_id = self.kwargs["pk"]
+        return get_products_by_category(category_id)
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context: dict[str, Any] = super().get_context_data(**kwargs)
+        context["category"] = get_object_or_404(Category, pk=self.kwargs["pk"])
+        return context
 
 
 class ProductCreateView(LoginRequiredMixin, CreateView):
