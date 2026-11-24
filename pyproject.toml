@@ -12,6 +12,7 @@ psycopg2-binary = "^2.9.12"
 python-dotenv = "^1.2.3"
 pillow = "^12.3.0"
 ipython = "^9.16.1"
+redis = "^8.2.0"
 
 
 [tool.poetry.group.dev.dependencies]
